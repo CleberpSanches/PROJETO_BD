@@ -1,11 +1,29 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cliente</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cliente</title>
 </head>
 <body>
-    <button></button>
+  <h1>Lista de Clientes</h1>
+  <button onclick="carregarClientes()">Carregar Clientes</button>
+  <ul id="lista-clientes"></ul>
+
+  <script>
+    async function carregarClientes() {
+      const resposta = await fetch("http://localhost:3000/clientes");
+      const clientes = await resposta.json();
+
+      const lista = document.getElementById("lista-clientes");
+      lista.innerHTML = ""; // limpa
+
+      clientes.forEach(c => {
+        const li = document.createElement("li");
+        li.textContent = `${c.id} - ${c.nome_razao}`;
+        lista.appendChild(li);
+      });
+    }
+  </script>
 </body>
 </html>

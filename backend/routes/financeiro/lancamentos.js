@@ -5,7 +5,7 @@ const pool = require('../bd/bd');
 // GET todos os clientes
 router.get('/', async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM lancamentos_inanceiros');
+    const [rows] = await pool.query('SELECT * FROM lancamentos_financeiros');
     res.json(rows);
   } catch (err) {
     console.error(err);

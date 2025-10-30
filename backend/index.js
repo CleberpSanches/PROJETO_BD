@@ -8,7 +8,7 @@ app.use(express.json());
 // Rotas
 
 //Financeiro
-const clientesRoutes = require('./routes/clientes');
+const clientesRoutes = require('/routes/clientes');
 app.use('/clientes', clientesRoutes);
 const lancamentosRoutes = require('./routes/financeiro/lancamentos');
 app.use('/lancamentos', lancamentosRoutes);
@@ -20,8 +20,6 @@ const contas_pagarRoutes = require('./routes/financeiro/contas_pagar');
 app.use('/contas_pagar', contas_pagarRoutes);
 const contas_receberRoutes = require('./routes/financeiro/contas_receber');
 app.use('/contas_receber', contas_receberRoutes);
-const diario_contabilRoutes = require('./routes/financeiro/diario_contabil');
-app.use('/diario_contabil', diario_contabilRoutes);
 const meios_pagamentoRoutes = require('./routes/financeiro/meios_pagamento');
 app.use('/meios_pagamento', meios_pagamentoRoutes);
 const notas_fiscaisRoutes = require('./routes/financeiro/notas_fiscais');

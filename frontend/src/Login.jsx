@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom"
+
 const Login = () => {
   return (
     <div className='flex min-h-screen bg-orange-50'>
@@ -23,11 +25,11 @@ const Login = () => {
         <img src='/src/imgs/Glamsync.png' width="256px"></img>
         <input type='name' placeholder='Usuário' className='p-3 rounded-md border border-black bg-transparent'/>
         <input type='password' placeholder='Senha' className='p-3 rounded-md border border-black bg-transparent' />
-        <button className='bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-lg'>
-          <a>
+        <Link to='/Dashboard'>
+          <button className='bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-lg'>
             Entrar
-          </a>
-        </button>
+          </button>
+        </Link>
         <a href='#' className='font-semibold text-orange-600 text-xs text-right underline' >Esqueceu a senha?</a>
       </div>
     </div>

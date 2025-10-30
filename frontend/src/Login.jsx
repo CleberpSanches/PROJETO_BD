@@ -33,14 +33,6 @@ const Login = () => {
         className="w-1/2 min-h-screen bg-cover bg-center bg-no-repeat relative"
         style={{ backgroundImage: "url('/src/imgs/signimg.png')" }}
       >
-        <div className="relative z-10 flex gap-4 p-5 align-baseline justify-end">
-          <button className='p-2 text-white text-xs font-regular px-8 border rounded-full border-white hover:bg-orange-700 hover:border-none'>
-            <a href='#'>Sou Cliente</a>
-          </button>
-          <button className='p-2 bg-orange-600 font-bold text-white text-xs font-regular px-8 rounded-full border-white'>
-            Sou Colaborador
-          </button>
-        </div>
       </div>
 
       {/* Lado direito - Login */}

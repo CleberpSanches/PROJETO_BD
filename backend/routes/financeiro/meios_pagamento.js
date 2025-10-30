@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const pool = require('../bd/bd');
+const pool = require('../../bd/bd');
 
 // GET todos os meios de pagamento
 router.get('/', async (req, res) => {

@@ -14,7 +14,7 @@ app.use(express.json());
 // Rota de teste
 app.get('/api', (req, res) => {
   res.json({ 
-    message: 'Backend conectado com sucesso! 🚀',
+    message: 'backend conectado com sucesso! 🚀',
     status: 'online',
     timestamp: new Date().toISOString()
   });

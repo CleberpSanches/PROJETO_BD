@@ -1,6 +1,21 @@
-import { Link } from "react-router-dom"
-
+import React, { useState } from 'react';
 const Login = () => {
+  const [usuario, setarusuario] = useState('');
+  const [senha, setarsenha] = useState('');
+
+  const loginReq = async () => {
+    try{const resposta = axios.post('http://localhost:3000/login', {
+        login: usuario,
+        senha: senha
+      })
+       setMensagem(` ${resposta.data.mensagem}`);
+    }
+    catch{
+
+    }
+    
+  }
+
   return (
     <div className='flex min-h-screen bg-orange-50'>
       {/* Lado esquerdo - Imagem de fundo */}
@@ -23,13 +38,26 @@ const Login = () => {
       {/* Lado direito - Formulário de login */}
       <div className='p-5 w-1/2 justify-center items-center flex flex-col gap-6'>
         <img src='/src/imgs/Glamsync.png' width="256px"></img>
-        <input type='name' placeholder='Usuário' className='p-3 rounded-md border border-black bg-transparent'/>
-        <input type='password' placeholder='Senha' className='p-3 rounded-md border border-black bg-transparent' />
-        <Link to='/Dashboard'>
-          <button className='bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-lg'>
+        <input 
+        type='name'
+        placeholder='Usuário'
+        className='p-3 rounded-md border border-black bg-transparent'
+        value={usuario}
+        onChange={(e) => setar(e.target.value)}
+        />
+
+        <input 
+        type='password'
+        placeholder='Senha'
+        className='p-3 rounded-md border border-black bg-transparent'
+        value={password}
+        onChange={(e) => setarSenha(e.target.value)}
+                 />
+        <button className='bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-lg'>
+          <a>
             Entrar
-          </button>
-        </Link>
+          </a>
+        </button>
         <a href='#' className='font-semibold text-orange-600 text-xs text-right underline' >Esqueceu a senha?</a>
       </div>
     </div>

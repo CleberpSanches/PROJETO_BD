@@ -8,4 +8,11 @@
 html{
      font-family: 'DM Sans', sans-serif;
      background-color: #F2ECEC;
+     overflow-x: hidden;
+}
+
+select, option {
+  white-space: nowrap;      
+  overflow: hidden;        
+  text-overflow: ellipsis; 
 }

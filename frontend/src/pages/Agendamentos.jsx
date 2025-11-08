@@ -27,14 +27,6 @@ const Agendamentos = () => {
 
   // Adicionar evento
   const [modalAberto, setModalAberto] = useState(false);
-  const [novoEvento, setNovoEvento] = useState({
-    title: '',
-    start: '',
-    observacao: '',
-    colaborador: '',
-    cliente: '',
-    telefone: '',
-  });
 
 
   // 🔹 Clique em uma data (sem evento)
@@ -130,6 +122,59 @@ const Agendamentos = () => {
           <div className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50'>
             <div className='bg-white rounded-lg shadow-lg p-6 w-[480px]'>
 
+              {/* Título e Botão de Saída */}
+              <div className='flex justify-between mb-2'>
+                <h2 className='font-bold text-xl'>Novo Agendamento</h2>
+                <button onClick={() => setModalAberto(null)}>
+                  <i className="bi bi-x-circle-fill text-orange-600 text-xl"></i>
+                </button>
+              </div>
+
+              {/* Dados do Cliente */}
+              <div className='border border-gray-400 border-md p-2 mb-2 rounded-md'>
+                <h3 className='font-bold text-gray-600'>Insira o Nome do Cliente</h3>
+                {/* Input */}
+                <input 
+                  type='text'
+                  placeholder='Nome do Cliente'
+                  className="border w-full border-gray-400 rounded-md p-2 text-xs focus:outline-none focus:border-orange-600"
+                />
+              </div>
+
+              <div className='border border-gray-400 border-md p-2 mb-2 rounded-md'>
+                <h3 className='font-bold text-gray-600'>Data e Horário</h3>
+                  {/* Input */}
+                  <input 
+                    type='date'
+                    placeholder='__/__/_____'
+                    className="border mb-1 w-full border-gray-400 rounded-md p-2 text-xs focus:outline-none focus:border-orange-600"
+                  />
+                  {/* Input */}
+                  <input 
+                    type='time'
+                    placeholder='00:00'
+                    className='border w-full border-gray-400 rounded-md p-2 text-xs focus:outline-none focus:border-orange-600'
+                  />
+              </div>
+
+              {/* Procedimento */}
+              <div className='border border-gray-400 border-md p-2 mb-2 rounded-md'>
+                <h3 className='font-bold text-gray-600'>Procedimento</h3>
+                {/* Input */}
+                <input 
+                  type='text'
+                  placeholder='Procedimento'
+                  className="border w-full border-gray-400 rounded-md p-2 text-xs focus:outline-none focus:border-orange-600"
+                />
+              </div>
+
+              {/* Salvar */}
+              <div className='flex items-center justify-center'>
+                <button className='rounded-md bg-green-600 p-2 flex text-orange-50 hover:bg-green-700'>
+                  <i class="bi bi-floppy"></i>
+                  Salvar Agendamento
+                </button>
+              </div>
             </div>
           </div>
         )}

@@ -8,14 +8,26 @@ import ptBrLocale from "@fullcalendar/core/locales/pt-br";
 import toast, { Toaster } from 'react-hot-toast';
 
 const Agendamentos = () => {
-  const [eventos] = useState([
-    { title: 'Exemplo', date: '2025-11-07', descricao: 'Bla´bla-bla' },
+
+  // Crebi os agendamentos eu chamei de eventos e é aqui que vc vai puxar os dados do bd pra exibir
+  // o id é importante pra que ele exiba os agendamentos de maneira correta :D
+  const [eventos, setEventos] = useState([
+    {
+      id:'1',
+      title: 'Corutney',
+      start: '2025-11-12T09:30:00',
+      observacao: 'Corte - Tape Fade',
+      colaborador: 'Nome do Colaborador',
+      cliente: 'Nome do Cliente',
+      telefone: '5575999036694'
+    },
   ]);
 
   const [eventoSelecionado, setEventoSelecionado] = useState(null);
 
+  // 🔹 Clique em uma data (sem evento)
   const handleDateClick = (info) => {
-    const evento = eventos.find((e) => e.date === info.dateStr);
+    const evento = eventos.find((e) => e.start.startsWith(info.dateStr));
     if (evento) {
       setEventoSelecionado(evento);
     } else {
@@ -30,13 +42,25 @@ const Agendamentos = () => {
     }
   };
 
+  // 🔹 Clique em um evento do calendário
+  const handleEventClick = (info) => {
+  console.log("Evento clicado:", info.event.title);
+  const eventoClicado = {
+    title: info.event.title,
+    start: info.event.startStr,
+    ...info.event.extendedProps,
+  };
+  setEventoSelecionado(eventoClicado);
+};
+
+
   return (
     <main className='flex w-screen h-screen overflow-x-hidden overflow-y-auto scrollbar-thin scrollbar-thumb-orange-600'>
       <Navbar />
 
       <Toaster position="top-center" />
 
-      <div className="p-6 w-screen overflow-hidden">
+      <div className="p-6 w-screen">
         <div id='filtros e info'>
           <h2 className='font-bold'>Agendamentos</h2>
           <div className='flex mb-3 mt-3 justify-end font-semibold'>
@@ -51,7 +75,7 @@ const Agendamentos = () => {
           </div>
         </div>
 
-        <div className='h-[70vh] mx-auto'>
+        <div className='h-[70vh] relative z-10'>
           <FullCalendar
             locale={ptBrLocale}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -66,27 +90,80 @@ const Agendamentos = () => {
               month: 'Mês',
               day: 'Dia'
             }}
-            height="auto"
-            contentHeight="auto"
+            height="100%"
             fixedWeekCount={false}
             selectable={true}
             dateClick={handleDateClick}
+            eventClick={handleEventClick}
+            eventDidMount={(info) => {
+              info.el.style.cursor = "pointer";
+            }}
             events={eventos}
+
+            // edição do evento no calendário
+            eventContent={(arg) => (
+            <div className="p-1">
+              <p className="font-bold text-xs text-orange-700">{arg.event.title}</p>
+              <p className="text-[11px] text-gray-700">{arg.event.extendedProps.observacao}</p>
+            </div>
+            )}
           />
         </div>
 
         {eventoSelecionado && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white rounded-lg shadow-lg p-6 w-[350px]">
-              <h2 className="text-xl font-bold text-orange-600">{eventoSelecionado.title}</h2>
-              <p className="mt-2 text-gray-700">{eventoSelecionado.descricao}</p>
-              <p className="text-sm text-gray-500 mt-1">📆 {eventoSelecionado.date}</p>
-              <div className="mt-4 flex justify-end">
-                <button
-                  onClick={() => setEventoSelecionado(null)}
-                  className="bg-gray-200 px-3 py-1 rounded-md hover:bg-gray-300"
+            <div className="bg-white rounded-lg shadow-lg p-6 w-[480px]">
+
+              {/* Título Cliente */}
+              <div className='flex justify-between mb-4'>
+                <div className='flex gap-3'>
+                  <img src='/src/imgs/pfp4.png' width='48px' alt='Profile'/>
+                  <h2 className="text-xl font-bold text-black">{eventoSelecionado.cliente}</h2>
+                </div>
+                <button onClick={() => setEventoSelecionado(null)}>
+                  <i className="bi bi-x-circle-fill text-orange-600 text-xl"></i>
+                </button>
+              </div>
+
+              {/* Data e Horário */}
+              <div className='border border-gray-500 mb-2 p-2 rounded-md'>
+                <h3 className='font-bold'>Data e Horário</h3>
+                <p className='mb-2 text-gray-700 text-sm'>
+                  {new Date(eventoSelecionado.start).toLocaleDateString('pt-BR')}
+                </p>
+                <p className='text-gray-700 text-sm'>
+                  {new Date(eventoSelecionado.start).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                </p>
+              </div>
+
+              {/* Informações do Procedimento */}
+              <div className='border border-gray-500 mb-2 p-2 rounded-md'>
+                <h3 className='font-bold'>Procedimento</h3>
+                <p className='text-gray-700 text-sm'>{eventoSelecionado.observacao}</p>
+              </div>
+
+              {/* Informações do Colaborador */}
+              <div className='border border-gray-500 mb-2 p-2 rounded-md'>
+                <h3 className='font-bold'>Colaborador Responsável</h3>
+                <p className="text-sm text-gray-500 mt-1">👤 {eventoSelecionado.colaborador}</p>
+              </div>
+
+              {/* Botões de Ação */}
+              <div className='flex justify-between'>
+                <button className='flex gap-2 text-sm p-3 rounded-md bg-orange-600 text-orange-50 hover:bg-orange-700'
+                   onClick={() => {
+                    const numero = eventoSelecionado.telefone; // 👈 vem do BD
+                    const msg = `Olá, ${eventoSelecionado.cliente}! Seu agendamento de ${eventoSelecionado.observacao} está marcado para ${new Date(eventoSelecionado.start).toLocaleDateString('pt-BR')} às ${new Date(eventoSelecionado.start).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}. ✅`;
+                    const link = `https://wa.me/${numero}?text=${encodeURIComponent(msg)}`;
+                    window.open(link, '_blank');
+                  }}
                 >
-                  Fechar
+                  <i className="bi bi-whatsapp"></i>
+                  Enviar Mensagem
+                </button>
+                <button className='flex gap-2 text-sm p-3 rounded-md border-2 border-gray-700'>
+                  <i className="bi bi-three-dots-vertical"></i>
+                  Editar Informações
                 </button>
               </div>
             </div>

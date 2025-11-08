@@ -13,7 +13,7 @@ const Navbar = () => {
   return (
     <nav className='w-1/4 h-screen p-6 border-r border-r-slate-400'>
       {/* profile */}
-      <div id='user-profile' className='flex gap-4 align-middle items-center '>
+      <div id='perfildeusuário' className='flex gap-4 align-middle items-center '>
         <img src='/src/imgs/pfp.png' width='48px' alt='Profile'/>
         <div>
           <p className='text-xs font-semibold'>João Pessoa Valensky</p>
@@ -29,7 +29,7 @@ const Navbar = () => {
       {/* search & notifications */}
       <div className='gap-4 align-middle items-center'>
         <button 
-          id='search' 
+          id='pesquisa' 
           className={`flex gap-6 transition-colors duration-100 ${
             isActive('/search') ? 'text-black font-semibold' : 'text-gray-600 hover:text-black'
           }`}
@@ -38,7 +38,7 @@ const Navbar = () => {
           <p>Pesquisar</p>
         </button>
         <button 
-          id='notifications' 
+          id='notificações' 
           className={`flex gap-6 transition-colors duration-100 ${
             isActive('/notifications') ? 'text-black font-semibold' : 'text-gray-600 hover:text-black'
           }`}
@@ -52,17 +52,30 @@ const Navbar = () => {
 
       {/* system navigation */}
       <div className='gap-4 align-middle items-center'>
-        <button 
+        <a href='/dashboard'>
+          <button 
           id='dashboard' 
           className={`flex gap-6 transition-colors duration-100 ${
-            isActive('/dashboard') || isActive('/') ? 'text-black font-semibold' : 'text-gray-600 hover:text-black'
+            isActive('/dashboard') ? 'text-black font-semibold' : 'text-gray-600 hover:text-black'
           }`}
-        >
-          <i className="bi bi-columns-gap"></i>
-          <p>Dashboard</p>
-        </button>
+          >
+            <i className="bi bi-columns-gap"></i>
+            <p>Dashboard</p>
+
+          </button>
+        </a>
+
+        <a href='/agendamentos'>
+          <button id='agendamentos' className={`flex gap-6 transition-colors duration-100 ${
+            isActive('/agendamentos') ? 'text-black font-semibold' : 'text-gray-600 hover:text-black'
+          }`}>
+            <i class="bi bi-calendar-event"></i>
+            <p>Agendamentos</p>
+          </button>
+        </a>
+
         <button 
-          id='workers' 
+          id='colaboradores' 
           className={`flex gap-6 transition-colors duration-100 ${
             isActive('/colaboradores') ? 'text-black font-semibold' : 'text-gray-600 hover:text-black'
           }`}

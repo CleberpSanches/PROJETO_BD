@@ -4,8 +4,32 @@
 @tailwind components;
 @tailwind utilities;
 
-
 html{
      font-family: 'DM Sans', sans-serif;
      background-color: #F2ECEC;
+     overflow-x: hidden;
+}
+
+select, option {
+  white-space: nowrap;      
+  overflow: hidden;        
+  text-overflow: ellipsis; 
+}
+
+.fc .fc-next-button {
+  @apply bg-orange-600 text-white rounded-md px-3 py-1 hover:bg-orange-700;
+}
+
+.fc .fc-prev-button{
+  @apply bg-transparent text-gray-700 rounded-md;
+}
+
+/* Altura menor nas células do modo MÊS */
+.fc .fc-daygrid-day {
+  min-height: 20px !important; 
+  min-width: 30px;/* padrão é cerca de 100px */
+}
+
+.fc .fc-daygrid-day-number {
+  font-size: 0.8rem !important;
 }

@@ -25,6 +25,18 @@ const Agendamentos = () => {
 
   const [eventoSelecionado, setEventoSelecionado] = useState(null);
 
+  // Adicionar evento
+  const [modalAberto, setModalAberto] = useState(false);
+  const [novoEvento, setNovoEvento] = useState({
+    title: '',
+    start: '',
+    observacao: '',
+    colaborador: '',
+    cliente: '',
+    telefone: '',
+  });
+
+
   // 🔹 Clique em uma data (sem evento)
   const handleDateClick = (info) => {
     const evento = eventos.find((e) => e.start.startsWith(info.dateStr));
@@ -68,13 +80,16 @@ const Agendamentos = () => {
               <button className='flex p-2 border border-gray-900 rounded-md gap-2 hover:bg-gray-800 hover:text-orange-50 hover:border-none'>
                 <i className="bi bi-clipboard-data"></i>Relatórios
               </button>
-              <button className='bg-orange-600 flex gap-2 text-gray-50 p-2 rounded-md hover:bg-orange-700'>
+              <button className='bg-orange-600 flex gap-2 text-gray-50 p-2 rounded-md hover:bg-orange-700'
+                onClick={() => setModalAberto(true)}
+              >
                 <i className="bi bi-plus"></i>Novo Agendamento
               </button>
             </div>
           </div>
         </div>
 
+        {/* Calendário */}
         <div className='h-[70vh] relative z-10'>
           <FullCalendar
             locale={ptBrLocale}
@@ -110,6 +125,16 @@ const Agendamentos = () => {
           />
         </div>
 
+        {/* Modal de Novo Agendamento */}
+        {modalAberto &&(
+          <div className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50'>
+            <div className='bg-white rounded-lg shadow-lg p-6 w-[480px]'>
+
+            </div>
+          </div>
+        )}
+
+        {/* Modal de Visualização de Agendamento que já existe */}
         {eventoSelecionado && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white rounded-lg shadow-lg p-6 w-[480px]">

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar'
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -6,6 +6,8 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import ptBrLocale from "@fullcalendar/core/locales/pt-br";
 import toast, { Toaster } from 'react-hot-toast';
+import axios from 'axios';
+
 
 const Agendamentos = () => {
 
@@ -13,7 +15,7 @@ const Agendamentos = () => {
   // o id é importante pra que ele exiba os agendamentos de maneira correta :D
   const [eventos, setEventos] = useState([
     {
-      id:'1',
+      id: '1',
       title: 'Corutney',
       start: '2025-11-12T09:30:00',
       observacao: 'Corte - Tape Fade',
@@ -22,6 +24,62 @@ const Agendamentos = () => {
       telefone: '5575999036694'
     },
   ]);
+  const [cliente_id, setClienteId] = useState('');
+  const [observacoes, setObservacoes] = useState('');
+  const [servico_id, setServicoId] = useState('');
+  const [colaboradores_id, setColaboradoresId] = useState('');
+  const [data, setData] = useState('');
+  const [hora, setHora] = useState('');
+
+  const [servicos, setServicos] = useState([]);
+  const [colaboradores, setColaborador] = useState([]);
+  useEffect(() => {
+    //servico
+    axios.get('http://localhost:3000/servicos')
+      .then((response) => {
+        setServicos(response.data);
+      })
+      .catch((error) => {
+        console.error("Erro ao buscar serviços:", error);
+        toast.error("Erro ao carregar os serviços!");
+      });
+    //colab
+    axios.get('http://localhost:3000/colaboradores')
+      .then((response) => {
+        setColaborador(response.data);
+      })
+      .catch((error) => {
+        console.error("Erro ao buscar colaboradores:", error);
+        toast.error("Erro ao carregar os colaboradores!");
+      });
+
+  }, []);
+
+  const salvarAgendamento = () => {
+    console.log({ cliente_id, observacoes, servico_id, colaboradores_id, data, hora });
+    axios.post('http://localhost:3000/agendamentos', {
+      cliente_id, 
+      observacoes, 
+      servico_id, 
+      colaboradores_id, 
+      data, 
+      hora
+    })
+    .then(() => {
+      toast.success('Agendamento salvo!');
+      // Atualizar o calendário
+      setEventos([...eventos, {
+        id: new Date().getTime().toString(),
+        title: cliente_id.nome_razao,
+        start: `${data}T${hora}`,
+        observacao: observacoes,
+        colaborador: colaboradores.find(c => c.id === colaboradores_id)?.nome,
+        cliente: cliente_id
+      }]);
+      setModalAberto(false);
+    })
+    .catch(() => toast.error('Erro ao salvar agendamento'));
+  };
 
   const [eventoSelecionado, setEventoSelecionado] = useState(null);
 
@@ -48,14 +106,14 @@ const Agendamentos = () => {
 
   // 🔹 Clique em um evento do calendário
   const handleEventClick = (info) => {
-  console.log("Evento clicado:", info.event.title);
-  const eventoClicado = {
-    title: info.event.title,
-    start: info.event.startStr,
-    ...info.event.extendedProps,
+    console.log("Evento clicado:", info.event.title);
+    const eventoClicado = {
+      title: info.event.title,
+      start: info.event.startStr,
+      ...info.event.extendedProps,
+    };
+    setEventoSelecionado(eventoClicado);
   };
-  setEventoSelecionado(eventoClicado);
-};
 
 
   return (
@@ -109,16 +167,16 @@ const Agendamentos = () => {
 
             // edição do evento no calendário
             eventContent={(arg) => (
-            <div className="p-1">
-              <p className="font-bold text-xs text-orange-700">{arg.event.title}</p>
-              <p className="text-[11px] text-gray-700">{arg.event.extendedProps.observacao}</p>
-            </div>
+              <div className="p-1">
+                <p className="font-bold text-xs text-orange-700">{arg.event.title}</p>
+                <p className="text-[11px] text-gray-700">{arg.event.extendedProps.observacao}</p>
+              </div>
             )}
           />
         </div>
 
         {/* Modal de Novo Agendamento */}
-        {modalAberto &&(
+        {modalAberto && (
           <div className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50'>
             <div className='bg-white rounded-lg shadow-lg p-6 w-[480px]'>
 
@@ -132,45 +190,105 @@ const Agendamentos = () => {
 
               {/* Dados do Cliente */}
               <div className='border border-gray-400 border-md p-2 mb-2 rounded-md'>
-                <h3 className='font-bold text-gray-600'>Insira o Nome do Cliente</h3>
+                <h3 className='font-bold text-gray-600'>Insira o Código do Cliente</h3>
                 {/* Input */}
-                <input 
+                <input
                   type='text'
-                  placeholder='Nome do Cliente'
+                  placeholder='Cliente'
+                  value={cliente_id}
+                  onChange={e => setClienteId(e.target.value)}
                   className="border w-full border-gray-400 rounded-md p-2 text-xs focus:outline-none focus:border-orange-600"
                 />
               </div>
 
+
+
               <div className='border border-gray-400 border-md p-2 mb-2 rounded-md'>
                 <h3 className='font-bold text-gray-600'>Data e Horário</h3>
-                  {/* Input */}
-                  <input 
-                    type='date'
-                    placeholder='__/__/_____'
-                    className="border mb-1 w-full border-gray-400 rounded-md p-2 text-xs focus:outline-none focus:border-orange-600"
-                  />
-                  {/* Input */}
-                  <input 
-                    type='time'
-                    placeholder='00:00'
-                    className='border w-full border-gray-400 rounded-md p-2 text-xs focus:outline-none focus:border-orange-600'
-                  />
+                {/* Input */}
+                <input
+                  type='date'
+                  placeholder='__/__/_____'
+                  value={data}
+                  onChange={e => setData(e.target.value)}
+                  className="border mb-1 w-full border-gray-400 rounded-md p-2 text-xs focus:outline-none focus:border-orange-600"
+                />
+                {/* Input */}
+                <input
+                  type='time'
+                  placeholder='00:00'
+                  value={hora}
+                  onChange={e => setHora(e.target.value)}
+                  className='border w-full border-gray-400 rounded-md p-2 text-xs focus:outline-none focus:border-orange-600'
+                />
               </div>
 
               {/* Procedimento */}
               <div className='border border-gray-400 border-md p-2 mb-2 rounded-md'>
-                <h3 className='font-bold text-gray-600'>Procedimento</h3>
+                <h3 className='font-bold text-gray-600'>Serviço</h3>
                 {/* Input */}
-                <input 
+                <select
+                  name='servico_id'
+                  value={servico_id}
+                  onChange={e => setServicoId(e.target.value)}
+                  className="border w-full border-gray-400 rounded-md p-2 text-xs focus:outline-none focus:border-orange-600"
+                  defaultValue=""
+                  required
+                >
+                  <option value="">Selecione um serviço</option>
+                  {
+                    servicos.map((s) =>
+                    (
+                      <option key={s.id} value={s.id}>
+                        {s.descricao}
+                      </option>
+                    )
+                    )
+                  }
+
+                </select>
+              </div>
+
+              <div className='border border-gray-400 border-md p-2 mb-2 rounded-md'>
+                <h3 className='font-bold text-gray-600'>Cabelereiro</h3>
+                {/* Input */}
+                <select
+                  name='colaboradores_id'
+                  value={colaboradores_id}
+                  onChange={e => setColaboradoresId(e.target.value)}
+                  className="border w-full border-gray-400 rounded-md p-2 text-xs focus:outline-none focus:border-orange-600"
+                  defaultValue=""
+                  required
+                >
+                  <option value="">Selecione um cabelereiro</option>
+                  {
+                    colaboradores.map((c) =>
+                    (
+                      <option key={c.id} value={c.id}>
+                        {c.nome}
+                      </option>
+                    )
+                    )
+                  }
+
+                </select>
+              </div>
+              {/* obs */}
+              <div className='border border-gray-400 border-md p-2 mb-2 rounded-md'>
+                <h3 className='font-bold text-gray-600'>Insira alguma observação</h3>
+                {/* Input */}
+                <input
                   type='text'
-                  placeholder='Procedimento'
+                  placeholder='OBS'
+                  value={observacoes}
+                  onChange={e => setObservacoes(e.target.value)}
                   className="border w-full border-gray-400 rounded-md p-2 text-xs focus:outline-none focus:border-orange-600"
                 />
               </div>
 
               {/* Salvar */}
               <div className='flex items-center justify-center'>
-                <button className='rounded-md bg-green-600 p-2 flex text-orange-50 hover:bg-green-700'>
+                <button onClick={salvarAgendamento} className='rounded-md bg-green-600 p-2 flex text-orange-50 hover:bg-green-700' >
                   <i class="bi bi-floppy"></i>
                   Salvar Agendamento
                 </button>
@@ -187,7 +305,7 @@ const Agendamentos = () => {
               {/* Título Cliente */}
               <div className='flex justify-between mb-4'>
                 <div className='flex gap-3'>
-                  <img src='/src/imgs/pfp4.png' width='48px' alt='Profile'/>
+                  <img src='/src/imgs/pfp4.png' width='48px' alt='Profile' />
                   <h2 className="text-xl font-bold text-black">{eventoSelecionado.cliente}</h2>
                 </div>
                 <button onClick={() => setEventoSelecionado(null)}>
@@ -221,7 +339,7 @@ const Agendamentos = () => {
               {/* Botões de Ação */}
               <div className='flex justify-between'>
                 <button className='flex gap-2 text-sm p-3 rounded-md bg-orange-600 text-orange-50 hover:bg-orange-700'
-                   onClick={() => {
+                  onClick={() => {
                     const numero = eventoSelecionado.telefone; // 👈 vem do BD
                     const msg = `Olá, ${eventoSelecionado.cliente}! Seu agendamento de ${eventoSelecionado.observacao} está marcado para ${new Date(eventoSelecionado.start).toLocaleDateString('pt-BR')} às ${new Date(eventoSelecionado.start).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}. ✅`;
                     const link = `https://wa.me/${numero}?text=${encodeURIComponent(msg)}`;

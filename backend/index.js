@@ -8,7 +8,12 @@ app.use(express.json());
 // Rotas
 const loginRoutes = require('./login');
 app.use('/login', loginRoutes);
-
+const servRoutes = require('./routes/servico/servicos');
+app.use('/servicos', servRoutes);
+const colabRoutes = require('./routes/RH/colaboradores');
+app.use('/colaboradores', colabRoutes);
+const agendRoutes = require('./routes/servico/agendamentos');
+app.use('/agendamentos', agendRoutes);
 
 const PORT = 3000;
 app.listen(PORT, () => {

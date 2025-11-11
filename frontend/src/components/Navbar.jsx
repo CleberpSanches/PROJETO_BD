@@ -69,7 +69,7 @@ const Navbar = () => {
           <button id='agendamentos' className={`flex gap-6 transition-colors duration-100 ${
             isActive('/agendamentos') ? 'text-black font-semibold' : 'text-gray-600 hover:text-black'
           }`}>
-            <i class="bi bi-calendar-event"></i>
+            <i className="bi bi-calendar-event"></i>
             <p>Agendamentos</p>
           </button>
         </a>

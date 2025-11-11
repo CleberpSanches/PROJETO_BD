@@ -34,6 +34,7 @@ const Agendamentos = () => {
   const [servicos, setServicos] = useState([]);
   const [colaboradores, setColaborador] = useState([]);
   useEffect(() => {
+    
     //servico
     axios.get('http://localhost:3000/servicos')
       .then((response) => {
@@ -53,7 +54,23 @@ const Agendamentos = () => {
         toast.error("Erro ao carregar os colaboradores!");
       });
 
+      axios.get('http://localhost:3000/agendamentos/detalhes')
+    .then((response) => {
+      const eventosBD = response.data.map((ag) => ({
+        id: ag.id,
+        title: ag.cliente_nome || "Sem nome",
+        start: `${ag.data}T${ag.hora}`,
+        observacao: ag.observacoes || '',
+        colaborador: ag.colaborador_nome || '',
+        cliente: ag.cliente_nome || '',
+        telefone: ag.telefone || ''
+      }));
+      setEventos(eventosBD);
+    })
+    .catch(() => toast.error("Erro ao carregar agendamentos!"));
+
   }, []);
+  
 
   const salvarAgendamento = () => {
     console.log({ cliente_id, observacoes, servico_id, colaboradores_id, data, hora });
@@ -289,7 +306,7 @@ const Agendamentos = () => {
               {/* Salvar */}
               <div className='flex items-center justify-center'>
                 <button onClick={salvarAgendamento} className='rounded-md bg-green-600 p-2 flex text-orange-50 hover:bg-green-700' >
-                  <i class="bi bi-floppy"></i>
+                  <i className="bi bi-floppy"></i>
                   Salvar Agendamento
                 </button>
               </div>
@@ -317,10 +334,10 @@ const Agendamentos = () => {
               <div className='border border-gray-500 mb-2 p-2 rounded-md'>
                 <h3 className='font-bold'>Data e Horário</h3>
                 <p className='mb-2 text-gray-700 text-sm'>
-                  {new Date(eventoSelecionado.start).toLocaleDateString('pt-BR')}
+                  {new Date(eventoSelecionado.data).toLocaleDateString('pt-BR')}
                 </p>
                 <p className='text-gray-700 text-sm'>
-                  {new Date(eventoSelecionado.start).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                  {new Date(eventoSelecionado.hora).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                 </p>
               </div>
 

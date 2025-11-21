@@ -45,7 +45,15 @@ router.post('/', async (req, res) => {
   }
 });
 
-module.exports = router;
+router.get('/quantidade', async (req, res) => {
+  try {
+      const [rows] = await pool.query('SELECT COUNT(*) AS total FROM colaboradores');
+      res.json({ total: rows[0].total });
+  } catch (err) {
+      console.log(err);
+      res.status(500).json({ error: 'Erro ao buscar quantidade' });
+  }
+});
 
 
 

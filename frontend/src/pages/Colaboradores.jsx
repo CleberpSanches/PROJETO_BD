@@ -19,7 +19,7 @@ const Agendamentos = () => {
   const [status, setStatus] = useState('');
 
   const [colaboradores, setColaboradores] = useState([]);
-
+  const [quantidade, setQuantidade] = useState(0);
   useEffect(() => {
     axios.get('http://localhost:3000/colaboradores')
       .then(response => setColaboradores(response.data))
@@ -61,6 +61,14 @@ const Agendamentos = () => {
 
   };
 
+  axios.get('http://localhost:3000/colaboradores/quantidade')
+    .then(response => {
+      setQuantidade(response.data.total);  
+    })
+    .catch(error => {
+      console.log("Erro:", error);
+    });
+
   return (
     <div className='w-screen flex h-screen overflow-x-hidden overflow-y-auto scrollbar-thin scrollbar-thumb-orange-600'>
       <Navbar />
@@ -79,7 +87,7 @@ const Agendamentos = () => {
               <div>
                 <p className='font-medium text-md'>Total de Colaboradores</p>
                 {/* Output ▼ | Use os dados do classname pliss pra a formatação ficar igual*/}
-                <p className='text-xs'>50</p>
+                <p className='text-xs'>{quantidade}</p>
               </div>
             </div>
           </div>

@@ -140,7 +140,7 @@ const Agendamentos = () => {
           {/* adicionar colaborador */}
           <button
             onClick={() => setIsModalOpen(true)}
-            className='bg-orange-600 flex gap-2 text-gray-50 p-2 rounded-md hover:bg-orange-700'>
+            className='text-xs items-center bg-orange-600 flex gap-2 text-gray-50 p- rounded-md hover:bg-orange-700'>
             <i className="bi bi-plus-circle"></i>
             Adicionar Colaborador
           </button>

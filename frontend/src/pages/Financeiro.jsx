@@ -59,6 +59,34 @@ const Financeiro = () => {
     }
   ]);
 
+  // MODAL
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // VALOR
+const [valor_base, setSalario] = useState("");
+
+const handleValorOnChange = (e) => {
+  const valorDigitado = e.target.value;
+
+  // Extrai somente números
+  const somenteNumeros = valorDigitado.replace(/\D/g, "");
+
+  // Atualiza o estado com o valor formatado
+  setSalario(formatarParaReal(somenteNumeros));
+};
+
+
+  const formatarParaReal = (valor) => {
+  if (!valor) return "";
+  const numero = Number(valor.replace(/\D/g, "")) / 100;
+  return numero.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL"
+  });
+};
+
+
+
   return (
     <main className='w-screen flex h-screen overflow-x-hidden overflow-y-auto'>
       <Navbar />
@@ -74,7 +102,9 @@ const Financeiro = () => {
                 <i class="bi bi-clipboard2-data"></i>
                 Relatório
               </button>
-              <button className='p-2 rounded-md bg-orange-600 text-orange-50 hover:bg-orange-700'>
+              <button className='p-2 rounded-md font-semibold bg-orange-600 text-orange-50 hover:bg-orange-700'
+                onClick={() => setIsModalOpen(true)}
+              >
                 <i class="bi bi-plus"></i>
                 Adicionar Lançamento
               </button>
@@ -152,6 +182,55 @@ const Financeiro = () => {
           </div>
         </section>
       </section>
+
+      {/* MODAL */}
+      {/* OBS o modal precisa salvar a data pra a formatação ficar igual a das listas */}
+      {/* Tem como adicionar um trigger pra pegar a data ao salvar? */}
+      {isModalOpen && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20">
+              <div className="bg-white p-6 rounded-lg w-96 shadow-lg relative">
+                <div className='flex justify-between mb-2'>
+                  <h2>Lançamento Financeiro</h2>
+                  <button
+                    onClick={() => setIsModalOpen(false)}
+                    className="text-gray-600 hover:text-gray-800"
+                  >
+                    <i className="bi bi-x-lg"></i>
+                  </button>
+                </div>
+
+                 <input
+                    type="text"
+                    placeholder="Nome do Lançamento"
+                    className="w-full mb-2 border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:border-orange-600"
+                  />
+
+                  <div className='flex gap-2 w-full mb-2'>
+                    <input
+                      type="text"
+                      placeholder="Valor"
+                      value={valor_base}
+                      onChange={handleValorOnChange}
+                      className="w-full border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:border-orange-600"
+                    />
+
+                    <select id='categoria'
+                      className='w-full border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:border-orange-600 w-40'>
+                      <option>Serviços</option>
+                      <option>Materiais</option>
+                      <option>Despesas Fixas</option>
+                    </select>
+                  </div>
+                  <button
+                     onClick={() => setIsModalOpen(false)}
+                    type="submit"
+                    className="w-full bg-orange-600 text-white py-2 rounded-md hover:bg-orange-700"
+                  >
+                    Salvar
+                  </button>
+              </div>
+            </div>
+      )}
     </main>
   )
 }

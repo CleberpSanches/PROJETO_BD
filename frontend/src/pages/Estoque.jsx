@@ -39,6 +39,9 @@ const Estoque = () => {
   // Menu dropdown global
   const [menuOpenItem, setMenuOpenItem] = useState(null);
 
+  // Modal adição de item
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <main className="w-screen flex h-screen overflow-x-hidden">
       <Navbar />
@@ -118,10 +121,59 @@ const Estoque = () => {
         </div>
 
         {/* Botão de Adicionar item */}
-        <button className='p-2 text-xs text-orange-50 font-semibold mb-2 bg-orange-600 rounded-md hover:bg-orange-700'>
+        <button className='p-2 text-xs text-orange-50 font-semibold mb-2 bg-orange-600 rounded-md hover:bg-orange-700'
+          onClick={() => setIsModalOpen(true)}
+        >
           <i className="bi bi-plus"></i>
           Adicionar Item
         </button>
+
+        {/* MODAL ADICIONAR ITEM */}
+         {isModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20">
+            <div className="bg-white p-6 rounded-lg w-96 shadow-lg relative">
+              <div className='flex justify-between mb-2'>
+                  <h2 className='font-semibold'>Adicionar Item</h2>
+                  <button
+                    onClick={() => setIsModalOpen(false)}
+                    className="text-gray-600 hover:text-gray-800"
+                  >
+                    <i className="bi bi-x-lg"></i>
+                  </button>
+                </div>
+
+                <input
+                  type="text"
+                  placeholder="Nome do Item"
+                  className="w-full mb-2 border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:border-orange-600"
+                /><input
+                  type="text"
+                  placeholder="Descrição"
+                  className="w-full mb-2 border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:border-orange-600"
+                />
+                <div className='flex gap-2'>
+                  <input
+                  type="number"
+                  placeholder="Quantidade"
+                  className="w-full mb-2 border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:border-orange-600"
+                  />
+                  <select id='categoria'
+                    className='border border-gray-300 rounded-md h-9 p-2 text-sm focus:outline-none focus:border-orange-600'>
+                    <option>Serviços</option>
+                    <option>Materiais</option>
+                    <option>Despesas Fixas</option>
+                  </select>
+                </div>
+                <button
+                     onClick={() => setIsModalOpen(false)}
+                    type="submit"
+                    className="w-full bg-orange-600 text-white py-2 rounded-md hover:bg-orange-700"
+                  >
+                    Salvar
+                  </button>
+            </div>
+          </div>
+         )}
 
         {/* Conteúdo */}
         <div className="flex gap-3">
@@ -185,7 +237,6 @@ const CardItem = ({ item, abrirModal, menuOpenItem, setMenuOpenItem }) => {
       </div>
 
       <div className="flex flex-col items-end gap-1">
-
         <div className="flex gap-2">
 
           {/* Botão editar */}

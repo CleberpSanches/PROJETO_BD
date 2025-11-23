@@ -6,9 +6,10 @@ import {
   Line,
   XAxis,
   YAxis,
-  Tooltip,
+  Tooltip as RechartsTooltip,
   CartesianGrid,
 } from "recharts";
+import Tooltip from '../components/Tooltip';
 
 const Financeiro = () => {
   const getMonthName = (date) =>
@@ -119,7 +120,7 @@ const handleValorOnChange = (e) => {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis />
-                  <Tooltip />
+                  <RechartsTooltip />
                   <Line type="monotone" dataKey="valor" stroke="#ea580c" strokeWidth={3} />
                 </LineChart>
               </div>
@@ -132,7 +133,7 @@ const handleValorOnChange = (e) => {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis />
-                  <Tooltip />
+                  <RechartsTooltip />
                   <Line type="monotone" dataKey="valor" stroke="#ea580c" strokeWidth={3} />
                 </LineChart>
               </div>
@@ -142,7 +143,12 @@ const handleValorOnChange = (e) => {
 
         {/* lista de entradas e saídas */}
         <section >
-          <h3 className='font-semibold mb-3'>Últimos Lançamentos</h3>
+          <div className='flex gap-2 items-baseline'>
+            <h3 className='font-semibold mb-3'>Últimos Lançamentos</h3>
+            <Tooltip text="Essa lista contém apenas os últimos 10 lançamentos">
+              <i class="bi bi-question-circle text-gray-600"></i>
+            </Tooltip>
+          </div>
 
           <div className='flex flex-col gap-3 max-h-[35vh] overflow-y-auto pr-2'>
             {lancamentos.length > 0 ? (

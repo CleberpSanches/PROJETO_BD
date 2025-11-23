@@ -70,7 +70,7 @@ const Agendamentos = () => {
     });
 
   return (
-    <div className='w-screen flex h-screen overflow-x-hidden overflow-y-auto scrollbar-thin scrollbar-thumb-orange-600'>
+    <div className='w-screen flex h-screen overflow-x-hidden overflow-y-auto'>
       <Navbar />
 
       <Toaster position="top-center" />

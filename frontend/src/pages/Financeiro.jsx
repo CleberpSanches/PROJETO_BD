@@ -85,10 +85,8 @@ const handleValorOnChange = (e) => {
   });
 };
 
-
-
   return (
-    <main className='w-screen flex h-screen overflow-x-hidden overflow-y-auto'>
+    <main className='w-screen flex h-screen overflow-x-hidden'>
       <Navbar />
       <Toaster position="top-center" />
       <section className='p-6 w-screen h-full'>
@@ -215,7 +213,7 @@ const handleValorOnChange = (e) => {
                     />
 
                     <select id='categoria'
-                      className='w-full border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:border-orange-600 w-40'>
+                      className='border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:border-orange-600 w-40'>
                       <option>Serviços</option>
                       <option>Materiais</option>
                       <option>Despesas Fixas</option>

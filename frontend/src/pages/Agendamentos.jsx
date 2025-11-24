@@ -277,7 +277,7 @@ const Agendamentos = () => {
                   defaultValue=""
                   required
                 >
-                  <option value="">Selecione um cabelereiro</option>
+                  <option value="">Selecione um colabordador</option>
                   {
                     colaboradores.map((c) =>
                     (

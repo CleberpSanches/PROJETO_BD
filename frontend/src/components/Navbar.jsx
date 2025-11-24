@@ -29,15 +29,6 @@ const Navbar = () => {
       {/* search & notifications */}
       <div className='gap-4 align-middle items-center'>
         <button 
-          id='pesquisa' 
-          className={`flex gap-6 transition-colors duration-100 ${
-            isActive('/search') ? 'text-black font-semibold' : 'text-gray-600 hover:text-black'
-          }`}
-        >
-          <i className="bi bi-search"></i>
-          <p>Pesquisar</p>
-        </button>
-        <button 
           id='notificações' 
           className={`flex gap-6 transition-colors duration-100 ${
             isActive('/notifications') ? 'text-black font-semibold' : 'text-gray-600 hover:text-black'
@@ -85,24 +76,28 @@ const Navbar = () => {
           <p>Colaboradores</p>
         </button>
         </a>
-        <button 
-          id='finances' 
-          className={`flex gap-6 transition-colors duration-100 ${
-            isActive('/financeiro') ? 'text-black font-semibold' : 'text-gray-600 hover:text-black'
-          }`}
-        >
-          <i className="bi bi-cash"></i>
-          <p>Financeiro</p>
-        </button>
-        <button 
-          id='stock' 
-          className={`flex gap-6 transition-colors duration-100 ${
-            isActive('/estoque') ? 'text-black font-semibold' : 'text-gray-600 hover:text-black'
-          }`}
-        >
-          <i className="bi bi-inboxes"></i>
-          <p>Estoque</p>
-        </button>
+        <a href='/financeiro'>
+            <button 
+            id='financeiro' 
+            className={`flex gap-6 transition-colors duration-100 ${
+              isActive('/financeiro') ? 'text-black font-semibold' : 'text-gray-600 hover:text-black'
+            }`}
+          >
+            <i className="bi bi-cash"></i>
+            <p>Financeiro</p>
+          </button>
+        </a>
+        <a href='/estoque'>
+            <button 
+            id='stock' 
+            className={`flex gap-6 transition-colors duration-100 ${
+              isActive('/estoque') ? 'text-black font-semibold' : 'text-gray-600 hover:text-black'
+            }`}
+          >
+            <i className="bi bi-inboxes"></i>
+            <p>Estoque</p>
+          </button>
+        </a>
       </div>
 
       <hr className='border-slate-400 my-4'/>

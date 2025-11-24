@@ -70,7 +70,7 @@ const Agendamentos = () => {
     });
 
   return (
-    <div className='w-screen flex h-screen overflow-x-hidden overflow-y-auto scrollbar-thin scrollbar-thumb-orange-600'>
+    <div className='w-screen flex h-screen overflow-x-hidden overflow-y-auto'>
       <Navbar />
 
       <Toaster position="top-center" />
@@ -94,7 +94,7 @@ const Agendamentos = () => {
 
           {/* Colaboradores novos do mês (nesse mês quantos foram contratados) */}
           <div id='status de colaboradores' >
-            <div className='flex gap-4 bg-gray-950 p-3 text-sm rounded-md justify-center'>
+            <div className='flex gap-4 bg-orange-700 p-3 text-sm rounded-md justify-center'>
               <i className="bi bi-person-add text-4xl"></i>
               <div>
                 <p className='font-medium text-md'>Colaboradores Contratados</p>
@@ -259,16 +259,6 @@ const Agendamentos = () => {
               </div>
             </div>
           )}
-        </section>
-
-        {/* FILTROS */}
-        <section id='filtros' className='flex gap-2'>
-          <button className='w-8 h-8 bg-orange-600 text-gray-50 rounded-md '>
-            <i className="bi bi-grid text-lg items-center"></i>
-          </button>
-          <button className='w-8 h-8 border border-gray-600 text-gray-600 rounded-md'>
-            <i className="bi bi-list text-lg"></i>
-          </button>
         </section>
 
         {/* COLABORADORES */}

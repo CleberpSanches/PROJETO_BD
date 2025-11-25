@@ -53,11 +53,22 @@ const Estoque = () => {
     })
       .catch(() => toast.error('Erro ao salvar estoque'));
   };
+  const [search, setSearch] = useState("");
 
+  const [resultadoFiltro, setResultadoFiltro] = useState([]);
 
-
+  const filtrar = () => {
+    const termo = search.toLowerCase();
+  
+    const filtrados = listaFormatada.filter((item) =>
+      item.nome.toLowerCase().includes(termo)
+    );
+  
+    setResultadoFiltro(filtrados);
+  };
+  
   const listaFormatada = estoques.map((e) => ({
-    produto_id: e.produto_id, 
+    produto_id: e.produto_id,
     estoque_id: e.id,
     nome: e.nome_produto,
     custo: e.preco_custo,
@@ -65,9 +76,14 @@ const Estoque = () => {
     quantidade: e.quantidade
   }));
   // Divide a lista automaticamente em duas colunas
-  const metade = Math.ceil(listaFormatada.length / 2);
-  const lista1 = listaFormatada.slice(0, metade);
-  const lista2 = listaFormatada.slice(metade);
+  const listaParaExibir =
+  resultadoFiltro.length > 0 || search.trim() !== ""
+    ? resultadoFiltro
+    : listaFormatada;
+
+  const metade = Math.ceil(listaParaExibir.length / 2);
+  const lista1 = listaParaExibir.slice(0, metade);
+  const lista2 = listaParaExibir.slice(metade);
 
   // Modal
   const [modalOpen, setModalOpen] = useState(false);
@@ -104,7 +120,7 @@ const Estoque = () => {
         local: editDescricao,
         quantidade: editQtd
       });
-      
+
 
       toast.success("Item atualizado!");
 
@@ -120,6 +136,7 @@ const Estoque = () => {
       toast.error("Erro ao atualizar item!");
     }
   };
+
 
 
   // Menu dropdown global
@@ -200,11 +217,13 @@ const Estoque = () => {
               <i className="bi bi-search text-gray-700 text-bold"></i>
               <input
                 type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
                 placeholder="Nome do Item"
                 className="bg-transparent focus:outline-none"
               />
             </div>
-            <button className="w-10 h-10 bg-orange-600 rounded-md hover:bg-orange-700">
+            <button className="w-10 h-10 bg-orange-600 rounded-md hover:bg-orange-700"   onClick={filtrar}>
               <i className="bi bi-search text-sm text-gray-100 text-bold"></i>
             </button>
           </div>

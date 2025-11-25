@@ -1,33 +1,91 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
+import toast, { Toaster } from 'react-hot-toast';
+import axios from 'axios';
 
 const Estoque = () => {
   const [lancamentos] = useState([
     {
       nome: "shampoo - marca tal",
-      categoria: "SERVIÇO",
+      custo: "",
       descricao: "Pagamento de serviço",
       quantidade: "10",
     },
     {
       nome: "condicionador - marca tal",
-      categoria: "PRODUTO",
+      custo: "",
       descricao: "Item em estoque",
       quantidade: "5",
     },
   ]);
 
+
+  const [produtos, setProdutos] = useState([]);
+  const [estoques, setEstoques] = useState([]);
+  useEffect(() => {
+    axios.get('http://localhost:3000/produtos')
+      .then((response) => {
+        setProdutos(response.data);
+      })
+      .catch((error) => {
+        console.error("Erro ao buscar Produto:", error);
+        toast.error("Erro ao carregar os Produtos!");
+      });
+
+    axios.get('http://localhost:3000/estoques/exibir')
+      .then((response) => {
+        setEstoques(response.data);
+      })
+      .catch((error) => {
+        console.error("Erro ao buscar Estoque:", error);
+        toast.error("Erro ao carregar o estoque!");
+      });
+  }, []);
+  const [produto_id, setProdutosId] = useState('');
+  const [quantidade, setQuantidade] = useState('');
+  const [local, setLocal] = useState('');
+  const salvarEstoque = () => {
+    console.log({ produto_id, quantidade, local });
+    axios.post('http://localhost:3000/estoques', {
+      produto_id,
+      quantidade,
+      local
+    })
+      .catch(() => toast.error('Erro ao salvar estoque'));
+  };
+
+
+
+  const listaFormatada = estoques.map((e) => ({
+    produto_id: e.produto_id, 
+    estoque_id: e.id,
+    nome: e.nome_produto,
+    custo: e.preco_custo,
+    descricao: e.local,
+    quantidade: e.quantidade
+  }));
   // Divide a lista automaticamente em duas colunas
-  const metade = Math.ceil(lancamentos.length / 2);
-  const lista1 = lancamentos.slice(0, metade);
-  const lista2 = lancamentos.slice(metade);
+  const metade = Math.ceil(listaFormatada.length / 2);
+  const lista1 = listaFormatada.slice(0, metade);
+  const lista2 = listaFormatada.slice(metade);
 
   // Modal
   const [modalOpen, setModalOpen] = useState(false);
   const [itemEditando, setItemEditando] = useState(null);
 
+  const [editNome, setEditNome] = useState("");
+  const [editDescricao, setEditDescricao] = useState("");
+  const [editCusto, setEditCusto] = useState("");
+  const [editQtd, setEditQtd] = useState("");
+
   const abrirModal = (item) => {
     setItemEditando(item);
+
+    setEditNome(item.nome);
+    setEditDescricao(item.descricao);
+    setEditCusto(item.custo);
+    setEditQtd(item.quantidade);
+
     setModalOpen(true);
   };
 
@@ -35,6 +93,34 @@ const Estoque = () => {
     setModalOpen(false);
     setItemEditando(null);
   };
+
+  const salvarEdicao = async () => {
+    try {
+      await axios.put(`http://localhost:3000/produtos/${itemEditando.produto_id}`, {
+        nome: editNome,
+        preco_custo: editCusto
+      });
+      await axios.put(`http://localhost:3000/estoques/${itemEditando.estoque_id}`, {
+        local: editDescricao,
+        quantidade: editQtd
+      });
+      
+
+      toast.success("Item atualizado!");
+
+      // fecha modal
+      fecharModal();
+
+      // recarrega o estoque atualizado
+      const response = await axios.get("http://localhost:3000/estoques/exibir");
+      setEstoques(response.data);
+
+    } catch (error) {
+      console.error(error);
+      toast.error("Erro ao atualizar item!");
+    }
+  };
+
 
   // Menu dropdown global
   const [menuOpenItem, setMenuOpenItem] = useState(null);
@@ -55,25 +141,29 @@ const Estoque = () => {
             <div className="flex flex-col gap-2">
               <input
                 type="text"
-                defaultValue={itemEditando.nome}
+                value={editNome}
+                onChange={(e) => setEditNome(e.target.value)}
                 className="border p-2 rounded text-sm"
               />
 
               <input
                 type="text"
-                defaultValue={itemEditando.descricao}
-                className="border p-2 rounded text-sm"
-              />
-
-              <input
-                type="text"
-                defaultValue={itemEditando.categoria}
+                value={editDescricao}
+                onChange={(e) => setEditDescricao(e.target.value)}
                 className="border p-2 rounded text-sm"
               />
 
               <input
                 type="number"
-                defaultValue={itemEditando.quantidade}
+                value={editCusto}
+                onChange={(e) => setEditCusto(e.target.value)}
+                className="border p-2 rounded text-sm"
+              />
+
+              <input
+                type="number"
+                value={editQtd}
+                onChange={(e) => setEditQtd(e.target.value)}
                 className="border p-2 rounded text-sm"
               />
             </div>
@@ -88,7 +178,7 @@ const Estoque = () => {
 
               <button
                 className="px-3 py-1 bg-orange-600 text-white rounded"
-                onClick={fecharModal}
+                onClick={salvarEdicao}
               >
                 Salvar
               </button>
@@ -129,51 +219,62 @@ const Estoque = () => {
         </button>
 
         {/* MODAL ADICIONAR ITEM */}
-         {isModalOpen && (
+        {isModalOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20">
             <div className="bg-white p-6 rounded-lg w-96 shadow-lg relative">
               <div className='flex justify-between mb-2'>
-                  <h2 className='font-semibold'>Adicionar Item</h2>
-                  <button
-                    onClick={() => setIsModalOpen(false)}
-                    className="text-gray-600 hover:text-gray-800"
-                  >
-                    <i className="bi bi-x-lg"></i>
-                  </button>
-                </div>
+                <h2 className='font-semibold'>Adicionar Item</h2>
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="text-gray-600 hover:text-gray-800"
+                >
+                  <i className="bi bi-x-lg"></i>
+                </button>
+              </div>
 
+              <select id='Nome'
+                value={produto_id}
+                onChange={e => setProdutosId(e.target.value)}
+                className='border border-gray-300 rounded-md h-9 p-2 text-sm focus:outline-none focus:border-orange-600'>
+                <option value="">Selecione um item</option>
+                {
+                  produtos.map((i) =>
+                  (
+                    <option key={i.id} value={i.id}>
+                      {i.nome}
+                    </option>
+                  )
+                  )
+                }
+              </select>
+              <div className='flex gap-2'>
                 <input
-                  type="text"
-                  placeholder="Nome do Item"
-                  className="w-full mb-2 border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:border-orange-600"
-                /><input
-                  type="text"
-                  placeholder="Descrição"
-                  className="w-full mb-2 border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:border-orange-600"
-                />
-                <div className='flex gap-2'>
-                  <input
                   type="number"
                   placeholder="Quantidade"
+                  value={quantidade}
+                  onChange={e => setQuantidade(e.target.value)}
                   className="w-full mb-2 border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:border-orange-600"
-                  />
-                  <select id='categoria'
-                    className='border border-gray-300 rounded-md h-9 p-2 text-sm focus:outline-none focus:border-orange-600'>
-                    <option>Serviços</option>
-                    <option>Materiais</option>
-                    <option>Despesas Fixas</option>
-                  </select>
-                </div>
-                <button
-                     onClick={() => setIsModalOpen(false)}
-                    type="submit"
-                    className="w-full bg-orange-600 text-white py-2 rounded-md hover:bg-orange-700"
-                  >
-                    Salvar
-                  </button>
+                />
+
+              </div>
+              <input
+                type="text"
+                placeholder="Local"
+                value={local}
+                onChange={e => setLocal(e.target.value)}
+                className="w-full mb-2 border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:border-orange-600"
+              />
+              <button
+                onClick={salvarEstoque}
+                type="submit"
+                className="w-full bg-orange-600 text-white py-2 rounded-md hover:bg-orange-700"
+              >
+                Salvar
+              </button>
             </div>
+
           </div>
-         )}
+        )}
 
         {/* Conteúdo */}
         <div className="flex gap-3">

@@ -14,6 +14,10 @@ const colabRoutes = require('./routes/RH/colaboradores');
 app.use('/colaboradores', colabRoutes);
 const agendRoutes = require('./routes/servico/agendamentos');
 app.use('/agendamentos', agendRoutes);
+const produtosRoutes = require('./routes/estoque/produtos');
+app.use('/produtos', produtosRoutes);
+const estoqueRoutes = require('./routes/estoque/estoques');
+app.use('/estoques', estoqueRoutes);
 
 const PORT = 3000;
 app.listen(PORT, () => {

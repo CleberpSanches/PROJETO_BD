@@ -89,24 +89,18 @@ const Navbar = () => {
 
       {/* settings & support */}
       <div className='gap-4 align-middle items-center'>
-        <button 
-          id='settings' 
-          className={`flex gap-6 transition-colors duration-100 ${
-            isActive('/configuracoes') ? 'text-black font-semibold' : 'text-gray-600 hover:text-black'
-          }`}
-        >
-          <i className="bi bi-gear"></i>
-          <p>Configurações</p>
-        </button>
-        <button 
-          id='support' 
-          className={`flex gap-6 transition-colors duration-100 ${
-            isActive('/suporte') ? 'text-black font-semibold' : 'text-gray-600 hover:text-black'
-          }`}
-        >
-          <i className="bi bi-question-circle"></i>
-          <p>Suporte</p>
-        </button>
+      
+      <a href='/suporte'>
+            <button 
+            id='suport' 
+            className={`flex gap-6 transition-colors duration-100 ${
+              isActive('/suporte') ? 'text-black font-semibold' : 'text-gray-600 hover:text-black'
+            }`}
+          >
+            <i className="bi bi-inboxes"></i>
+            <p>Suporte</p>
+          </button>
+        </a>
       </div>
     </nav>
   );

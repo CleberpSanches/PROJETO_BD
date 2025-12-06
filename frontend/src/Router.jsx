@@ -7,6 +7,7 @@ import Agendamentos from './pages/Agendamentos';
 import Colaboradores from './pages/Colaboradores'
 import Financeiro from './pages/Financeiro'
 import Estoque from './pages/Estoque'
+import Suporte from './pages/Suporte'
 
 
 const Router = () => {
@@ -21,6 +22,7 @@ const Router = () => {
                 <Route path='/colaboradores' element={<Colaboradores />} />
                 <Route path='/financeiro' element={<Financeiro />}/>
                 <Route path='/estoque' element={<Estoque />}/>
+                <Route path='/suporte' element={<Suporte />}/>
                 {/* Adiciona do mesmo jeito aqui outras páginas */}
             </Routes>
     </BrowserRouter>

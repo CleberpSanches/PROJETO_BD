@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar'
 import {
   LineChart,
@@ -8,6 +8,7 @@ import {
   Tooltip as RechartsTooltip,
   CartesianGrid,
 } from "recharts";
+import axios from 'axios';
 
 const Dashboard = () => {
   const [itens, setItens] = useState([
@@ -40,6 +41,20 @@ const Dashboard = () => {
       contato: 75999999999
     },
   ]);
+  const [agendamentos, setAgendamentos] = useState([]);
+  useEffect(() => {
+
+    //agendamentos
+    axios.get('http://localhost:3000/agendamentos/detalhes2')
+      .then((response) => {
+        setAgendamentos(response.data);
+      })
+      .catch((error) => {
+        console.error("Erro ao buscar serviços:", error);
+        toast.error("Erro ao carregar os serviços!");
+      });
+
+  }, []);
 
   // gráfico
   const getMonthName = (date) =>
@@ -47,24 +62,32 @@ const Dashboard = () => {
 
   const now = new Date();
 
-  const month0 = new Date(now.getFullYear(), now.getMonth() - 2, 1); 
-  const month1 = new Date(now.getFullYear(), now.getMonth() - 1, 1); 
+  const month0 = new Date(now.getFullYear(), now.getMonth() - 2, 1);
+  const month1 = new Date(now.getFullYear(), now.getMonth() - 1, 1);
   const month2 = new Date(now.getFullYear(), now.getMonth(), 1);
 
-  const data = [
-    {
-      name: getMonthName(month0),
-      valor: Math.floor(Math.random() * 100),
-    },
-    {
-      name: getMonthName(month1),
-      valor: Math.floor(Math.random() * 100),
-    },
-    {
-      name: getMonthName(month2),
-      valor: Math.floor(Math.random() * 100),
-    },
-  ];
+  const contagemPorMes = {};
+
+  agendamentos.forEach(item => {
+    const mes = new Date(item.data).toLocaleString("pt-BR", { month: "short" }).toUpperCase();
+    contagemPorMes[mes] = (contagemPorMes[mes] || 0) + 1;
+  });
+
+  const data = Object.keys(contagemPorMes).map(mes => ({
+    name: mes,
+    valor: contagemPorMes[mes]
+  }));
+
+
+  const formatarData = (data) => {
+    return new Date(data).toLocaleDateString("pt-BR");
+  };
+
+  const formatarHora = (hora) => {
+    
+    return hora.slice(0, 5);
+  };
+
 
   return (
     <div className='w-screen flex h-screen'>
@@ -73,39 +96,28 @@ const Dashboard = () => {
         <h2 className="text-xl font-semibold mb-4">Dashboard</h2>
         <div className='flex justify-center gap-24 mb-3'>
           {/* gráfico 1 */}
-            <div>
-              <h3 className='font-bold text-xs'>Agendamentos</h3>
-              <div className="bg-transparent p-2 rounded-2xl text-xs">
-                <LineChart width={250} height={150} data={data}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <RechartsTooltip />
-                  <Line type="monotone" dataKey="valor" stroke="#ea580c" strokeWidth={3} />
-                </LineChart>
-              </div>
+          <div>
+            <h3 className='font-bold text-xs'>Agendamentos</h3>
+            <div className="bg-transparent p-2 rounded-2xl text-xs">
+              <LineChart width={250} height={150} data={data}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <RechartsTooltip />
+                <Line type="monotone" dataKey="valor" stroke="#ea580c" strokeWidth={3} />
+              </LineChart>
             </div>
-        {/* gráfico 2 */}
-            <div>
-              <h3 className='font-bold text-xs'>Faturamento</h3>
-              <div className="bg-transparent p-2 rounded-2xl text-xs">
-                <LineChart width={250} height={150} data={data}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <RechartsTooltip />
-                  <Line type="monotone" dataKey="valor" stroke="#ea580c" strokeWidth={3} />
-                </LineChart>
-              </div>
-            </div>
+          </div>
+
         </div>
 
-            {/* tabela */}
+        {/* tabela */}
         <div className="max-h-[40vh] w-full overflow-y-auto rounded-md border">
           <table className="min-w-full bg-orange-50">
             <thead>
               <tr className="bg-orange-100 text-orange-800 border-b">
                 <th className="p-3 text-left">Nome</th>
+                <th className="p-3 text-left">Data</th>
                 <th className="p-3 text-left">Horário</th>
                 <th className="p-3 text-left">Procedimento</th>
                 <th className="p-3 text-left">Contato</th>
@@ -113,12 +125,13 @@ const Dashboard = () => {
             </thead>
 
             <tbody>
-              {itens.map(item => (
+              {agendamentos.map(item => (
                 <tr key={item.id} className="border-b hover:bg-gray-50">
-                  <td className="p-3">{item.nome}</td>
-                  <td className="p-3">{item.horario}</td>
-                  <td className="p-3">{item.procedimento}</td>
-                  <td className="p-3">{item.contato}</td>
+                  <td className="p-3">{item.cliente_nome}</td>
+                  <td className="p-3">{formatarData(item.data)}</td>
+                  <td className="p-3">{formatarHora(item.hora)}</td>
+                  <td className="p-3">{item.servico_nome}</td>
+                  <td className="p-3">{item.telefone}</td>
                 </tr>
               ))}
             </tbody>

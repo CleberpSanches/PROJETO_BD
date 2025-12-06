@@ -99,7 +99,7 @@ const Agendamentos = () => {
               <div>
                 <p className='font-medium text-md'>Colaboradores Contratados</p>
                 {/* Output ▼ | Use os dados do classname pliss pra a formatação ficar igual*/}
-                <p className='text-xs'>25</p>
+                <p className='text-xs'>{quantidade}</p>
               </div>
             </div>
           </div>
@@ -129,16 +129,6 @@ const Agendamentos = () => {
                 className='bg-transparent focus:outline-none'
               />
             </div>
-
-            {/* adicionar status */}
-            <select id='search'
-              onClick={() => setIsOpen(!isOpen)}
-              className='flex justify-between bg-transparent font-light p-2 text-xs rounded-md border border-gray-500 text-gray-600 focus:outline-none'>
-              <option>Contratado</option>
-              <option>Em análise</option>
-              <option>Demitido</option>
-            </select>
-
             {/* botão de pesquisa */}
             <button className='w-10 h-10 bg-orange-600 rounded-md hover:bg-orange-700'>
               <i className="bi bi-search text-sm text-gray-100 text-bold"></i>

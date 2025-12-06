@@ -13,5 +13,20 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.post('/', async (req, res) => {
+  const {nome_razao, documento, email, telefone, endereco} = req.body;
+
+  try {
+    const [result] = await pool.query(
+      'INSERT INTO fornecedores (nome_razao, documento, email, telefone, endereco) VALUES (?, ?, ?, ?, ?)',
+      [nome_razao, documento, email, telefone, endereco]
+    );
+    res.json({ id: result.insertId });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erro ao criar fornecedor' });
+  }
+})
+
 
 module.exports = router;

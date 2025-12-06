@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-
+import { useNavigate } from 'react-router-dom';
 const Login = () => {
   const [login, setarlogin] = useState('');
   const [senha, setarsenha] = useState('');
   const [mensagem, setMensagem] = useState(''); // ✅ estado para feedback
+  const navigate = useNavigate();
 
   const loginReq = async () => {
     try {
@@ -12,12 +13,17 @@ const Login = () => {
         login,
         senha
       });
-
-      // ✅ mostra mensagem de sucesso
+  
       setMensagem(resposta.data.mensagem);
       console.log(resposta.data);
+      
+      if (resposta.data.sucesso === true) {
+        navigate('/dashboard');
+      }
+  
     } catch (erro) {
       console.error('Erro ao fazer login:', erro);
+  
       if (erro.response && erro.response.data) {
         setMensagem(erro.response.data.mensagem);
       } else {
@@ -25,6 +31,7 @@ const Login = () => {
       }
     }
   };
+  
 
   return (
     <div className='flex min-h-screen bg-orange-50'>

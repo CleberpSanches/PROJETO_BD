@@ -26,21 +26,6 @@ const Navbar = () => {
 
       <hr className='border-slate-400 my-4'/>
 
-      {/* search & notifications */}
-      <div className='gap-4 align-middle items-center'>
-        <button 
-          id='notificações' 
-          className={`flex gap-6 transition-colors duration-100 ${
-            isActive('/notifications') ? 'text-black font-semibold' : 'text-gray-600 hover:text-black'
-          }`}
-        >
-          <i className="bi bi-bell-fill"></i>
-          <p>Notificações</p>
-        </button>
-      </div>
-
-      <hr className='border-slate-400 my-4'/>
-
       {/* system navigation */}
       <div className='gap-4 align-middle items-center'>
         <a href='/dashboard'>

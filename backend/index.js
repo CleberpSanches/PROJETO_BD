@@ -18,6 +18,16 @@ const produtosRoutes = require('./routes/estoque/produtos');
 app.use('/produtos', produtosRoutes);
 const estoqueRoutes = require('./routes/estoque/estoques');
 app.use('/estoques', estoqueRoutes);
+const mpagamentoRoutes = require('./routes/financeiro/meios_pagamento');
+app.use('/meios_pagamento', mpagamentoRoutes);
+const cfinanceirasRoutes = require('./routes/financeiro/contas_financeiras');
+app.use('/contas_financeiras', cfinanceirasRoutes);
+const lancamentosRoutes = require('./routes/financeiro/lancamentos');
+app.use('/lancamentos', lancamentosRoutes);
+const tlancamentosRoutes = require('./routes/financeiro/tipo_lancamento');
+app.use('/tipo_lancamento', tlancamentosRoutes);
+
+
 
 const PORT = 3000;
 app.listen(PORT, () => {

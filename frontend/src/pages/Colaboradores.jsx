@@ -9,6 +9,9 @@ const Agendamentos = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   //consts
+  const [busca, setBusca] = useState('');
+  const [colaboradoresFiltrados, setColaboradoresFiltrados] = useState([]);
+
   const [nome, setNome] = useState('');
   const [cpf, setCpf] = useState('');
   const [email, setEmail] = useState('');
@@ -22,10 +25,12 @@ const Agendamentos = () => {
   const [quantidade, setQuantidade] = useState(0);
   useEffect(() => {
     axios.get('http://localhost:3000/colaboradores')
-      .then(response => setColaboradores(response.data))
+      .then(response => {
+        setColaboradores(response.data);
+        setColaboradoresFiltrados(response.data); // <- ADICIONE AQUI
+      })
       .catch(() => toast.error('Erro ao carregar colaboradores'));
   }, []);
-
 
   const salvarColaboradores = () => {
     console.log({
@@ -50,6 +55,21 @@ const Agendamentos = () => {
     })
       .catch(() => toast.error('Erro ao salvar colaborador'));
   }
+
+  const buscarColaborador = () => {
+    if (!busca.trim()) {
+      setColaboradoresFiltrados(colaboradores);
+      return;
+    }
+
+    const filtrados = colaboradores.filter(c =>
+      c.nome.toLowerCase().includes(busca.toLowerCase())
+    );
+
+    setColaboradoresFiltrados(filtrados);
+  };
+
+
   // modal
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -63,7 +83,7 @@ const Agendamentos = () => {
 
   axios.get('http://localhost:3000/colaboradores/quantidade')
     .then(response => {
-      setQuantidade(response.data.total);  
+      setQuantidade(response.data.total);
     })
     .catch(error => {
       console.log("Erro:", error);
@@ -124,15 +144,22 @@ const Agendamentos = () => {
             <div id='search' className='flex font-light p-2 text-xs rounded-md border border-gray-500 text-gray-400 gap-3 items-center'>
               <i className="bi bi-search text-gray-700 text-bold"></i>
               <input
-                type='name'
-                placeholder='Nome do Colaboroador'
+                type='text'
+                placeholder='Nome do Colaborador'
+                value={busca}
+                onChange={(e) => setBusca(e.target.value)}
                 className='bg-transparent focus:outline-none'
               />
+
             </div>
             {/* botão de pesquisa */}
-            <button className='w-10 h-10 bg-orange-600 rounded-md hover:bg-orange-700'>
+            <button
+              onClick={buscarColaborador}
+              className='w-10 h-10 bg-orange-600 rounded-md hover:bg-orange-700'
+            >
               <i className="bi bi-search text-sm text-gray-100 text-bold"></i>
             </button>
+
           </div>
 
           {/* adicionar colaborador */}
@@ -254,8 +281,8 @@ const Agendamentos = () => {
         {/* COLABORADORES */}
         <section>
           <div className="grid grid-cols-4 gap-4 m-0 p-4 items-center">
-            {colaboradores.length > 0 ? (
-              colaboradores.map(colab => (
+            {colaboradoresFiltrados.length > 0 ? (
+              colaboradoresFiltrados.map(colab => (
                 <div
                   key={colab.id}
                   className="p-3 bg-transparent border border-gray-600 text-white rounded-md"

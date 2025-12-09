@@ -6,6 +6,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import ptBrLocale from "@fullcalendar/core/locales/pt-br";
 import toast, { Toaster } from 'react-hot-toast';
+import InputMask from "react-input-mask";
 import axios from 'axios';
 
 
@@ -30,6 +31,12 @@ const Agendamentos = () => {
   const [colaboradores_id, setColaboradoresId] = useState('');
   const [data, setData] = useState('');
   const [hora, setHora] = useState('');
+  const [modalCliente, setModalCliente] = useState(false);
+  const [documento, setDocumento] = useState('');
+  const [nomeRazao, setNomeRazao] = useState('');
+  const [email, setEmail] = useState('');
+  const [telefone, setTelefone] = useState('');
+
 
   const [servicos, setServicos] = useState([]);
   const [colaboradores, setColaborador] = useState([]);
@@ -100,6 +107,22 @@ const Agendamentos = () => {
       .catch(() => toast.error('Erro ao salvar agendamento'));
   };
 
+  const salvarCliente = async () => {
+      axios.post('http://localhost:3000/cliente', {
+        documento,
+        nome_razao: nomeRazao,
+        email,
+        telefone
+      })
+      .then(() => {
+        toast.success('cliente salvo!');
+        alert("Cliente cadastrado com sucesso!");
+        setModalAberto(false);
+      })
+
+  };
+
+
   const [eventoSelecionado, setEventoSelecionado] = useState(null);
 
   // Adicionar evento
@@ -146,8 +169,10 @@ const Agendamentos = () => {
           <h2 className='font-bold'>Agendamentos</h2>
           <div className='flex mb-3 mt-3 justify-end font-semibold'>
             <div className='flex gap-2 text-sm'>
-              <button className='flex p-2 border border-gray-900 rounded-md gap-2 hover:bg-gray-800 hover:text-orange-50 hover:border-none'>
-                <i className="bi bi-clipboard-data"></i>Relatórios
+              <button className='bg-orange-600 flex gap-2 text-gray-50 p-2 rounded-md hover:bg-orange-700'
+                onClick={() => setModalCliente(true)}
+              >
+                <i className="bi bi-plus"></i>Novo Cliente
               </button>
               <button className='bg-orange-600 flex gap-2 text-gray-50 p-2 rounded-md hover:bg-orange-700'
                 onClick={() => setModalAberto(true)}
@@ -315,6 +340,84 @@ const Agendamentos = () => {
             </div>
           </div>
         )}
+
+        {modalCliente && (
+          <div className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50'>
+            <div className='bg-white rounded-lg shadow-lg p-6 w-[480px]'>
+
+              {/* Título e Botão de Saída */}
+              <div className='flex justify-between mb-2'>
+                <h2 className='font-bold text-xl'>Novo Cliente</h2>
+                <button onClick={() => setModalCliente(null)}>
+                  <i className="bi bi-x-circle-fill text-orange-600 text-xl"></i>
+                </button>
+              </div>
+
+              {/* Documento */}
+              <div className='border border-gray-400 border-md p-2 mb-2 rounded-md'>
+                <h3 className='font-bold text-gray-600'>Documento</h3>
+                <InputMask
+                  mask="999.999.999-99"
+                  placeholder="CPF"
+                  value={documento}
+                  onChange={e => setDocumento(e.target.value)}
+                  className="border w-full border-gray-400 rounded-md p-2 text-xs focus:outline-none focus:border-orange-600"
+                />
+              </div>
+
+              {/* Nome / Razão Social */}
+              <div className='border border-gray-400 border-md p-2 mb-2 rounded-md'>
+                <h3 className='font-bold text-gray-600'>Nome</h3>
+                <input
+                  type='text'
+                  placeholder='Digite o nome'
+                  value={nomeRazao}
+                  onChange={e => setNomeRazao(e.target.value)}
+                  className="border w-full border-gray-400 rounded-md p-2 text-xs focus:outline-none focus:border-orange-600"
+                />
+              </div>
+
+              {/* Email */}
+              <div className='border border-gray-400 border-md p-2 mb-2 rounded-md'>
+                <h3 className='font-bold text-gray-600'>Email</h3>
+                <input
+                  type='email'
+                  placeholder='exemplo@email.com'
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  className="border w-full border-gray-400 rounded-md p-2 text-xs focus:outline-none focus:border-orange-600"
+                />
+              </div>
+
+              {/* Telefone */}
+              <div className='border border-gray-400 border-md p-2 mb-2 rounded-md'>
+                <h3 className='font-bold text-gray-600'>Telefone</h3>
+                <InputMask
+                  mask={"(99)\\99999-9999"}
+                  placeholder='Telefone'
+                  value={telefone}
+                  onChange={e => setTelefone(e.target.value)}
+                  className="border w-full border-gray-400 rounded-md p-2 text-xs focus:outline-none focus:border-orange-600"
+                />
+              </div>
+
+              {/* Botão Salvar */}
+              <div className='flex items-center justify-center'>
+                <button
+                  onClick={salvarCliente}
+                  className='rounded-md bg-green-600 p-2 flex text-orange-50 hover:bg-green-700'
+                >
+                  <i className="bi bi-floppy"></i>
+                  Salvar Cliente
+                </button>
+              </div>
+
+            </div>
+          </div>
+        )}
+
+
+
 
         {/* Modal de Visualização de Agendamento que já existe */}
         {eventoSelecionado && (

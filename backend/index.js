@@ -28,6 +28,8 @@ const tlancamentosRoutes = require('./routes/financeiro/tipo_lancamento');
 app.use('/tipo_lancamento', tlancamentosRoutes);
 const fornecedoresRoutes = require('./routes/estoque/fornecedores');
 app.use('/fornecedores', fornecedoresRoutes);
+const clienteRoutes = require('./routes/servico/cliente');
+app.use('/cliente', clienteRoutes);
 
 
 

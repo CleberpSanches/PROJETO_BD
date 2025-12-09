@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const pool = require('./bd/bd');
+const pool = require('../../bd/bd');
 
-// GET todas as compras
+// GET todas os clientes
 router.get('/', async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT * FROM clientes');
@@ -13,19 +13,19 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST criar uma cliente
+// POST criar um cliente
 router.post('/', async (req, res) => {
-  const { fornecedor_id, total, status } = req.body;
+  const { documento,nome_razao, email, telefone } = req.body;
 
   try {
     const [result] = await pool.query(
-      'INSERT INTO compras (fornecedor_id, total, status) VALUES (?, ?, ?)',
-      [fornecedor_id, total, status]
+      'INSERT INTO clientes (documento,nome_razao, email, telefone ) VALUES (?, ?, ?, ?)',
+      [documento,nome_razao, email, telefone ]
     );
     res.json({ id: result.insertId });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Erro ao criar compra' });
+    res.status(500).json({ error: 'Erro ao criar cliente' });
   }
 });
 
